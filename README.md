@@ -1,10 +1,12 @@
 ![Python](https://img.shields.io/badge/python-v3.10+-blue.svg)
 [![Build Status](https://travis-ci.org/anfederico/clairvoyant.svg?branch=master)](https://travis-ci.org/anfederico/clairvoyant)
 ![Contributions welcome](https://img.shields.io/badge/contributions-welcome-orange.svg)
+[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://GitHub.com/Naereen/StrapDown.js/graphs/commit-activity)
+[![Awesome](https://cdn.rawgit.com/sindresorhus/awesome/d7305f38d29fed78fa85652e3a63e154dd8e8829/media/badge.svg)](https://github.com/sindresorhus/awesome)
 
 <a name="readme-top"></a>
 
-# # Euler-number-3D-using-IA
+# Euler-number-3D-using-Regression-Models
 
 Hey there! I see you're interested in learning about the Euler number. This is a fundamental concept in mathematics that helps us understand the topology of objects in 2D and 3D space.
 
@@ -17,6 +19,18 @@ It's important to note that the Euler number is always an integer and can be neg
 Euler number = Number of connected components - Number of handles + Number of boundaries
 
 We present a new library designed to simplify the analysis of Euler characteristics. This program addresses the difficulties involved in generating 3D test objects and the complexities of extracting Octo-Voxel patterns. The library uses a novel method to rapidly generate data, AND extract descriptors by using effective multiprocessing. Furthermore, a method for extracting discrete CHUNKS from an image has been developed, allowing for separate multiprocessing assessment. This method accelerates the process of combination extraction and offers researchers a quick and effective way to look into Euler characteristics in a variety of applications. Our system provides a comprehensive solution for researchers looking for effective ways to create and analyze data, which will advance the discovery of Euler characteristics across a wide range of areas.
+
+## Regression Model
+
+- `ARD Regression` : ARD regression is a Bayesian regression technique that automatically determines the relevance of input features by estimating their importance. It assigns a coefficient to each input feature, and the model automatically selects the most relevant features while shrinking the coefficients of less relevant ones towards zero. This technique helps prevent overfitting by effectively performing feature selection and regularization simultaneously.
+
+- `Orthogonal Matching Pursuit Regression` : Orthogonal Matching Pursuit (OMP) regression is a sparse linear regression technique used for feature selection and model fitting. It iteratively selects the most correlated features with the target variable and updates the model coefficients to minimize the residual error. OMP is particularly useful when dealing with high-dimensional data and can provide a sparse solution, meaning it selects only a subset of the available features for prediction.
+
+- `Bayesian Regression` : Bayesian regression is a statistical framework for regression analysis that applies Bayesian methods to estimate the parameters of a regression model. Unlike traditional regression techniques, Bayesian regression provides probabilistic estimates of model parameters, allowing for uncertainty quantification.
+
+- `Linear Regression` : Linear regression is a fundamental statistical technique used to model the relationship between one or more independent variables (features) and a dependent variable (target). It assumes a linear relationship between the input features and the target variable, represented by a straight line in the case of simple linear regression or a hyperplane in the case of multiple linear regression.
+
+- `LassoLarsIC` : LassoLarsIC is a variant of Lasso regression, a regularization technique used for feature selection and regularization in linear regression models. It combines the least angle regression (Lars) algorithm with Lasso regularization and an information criterion for model selection. LassoLarsIC iteratively fits the model with different subsets of features, gradually adding features that are most correlated with the target variable while simultaneously shrinking the coefficients of less relevant features towards zero.
 
 ## Setup
 
@@ -67,6 +81,49 @@ By following these steps, you'll successfully create a virtual environment with 
     - `Generator.py`: An abstract class for generating and saving matrices.
         - `MatrixGenerator.py`: A class for generating and saving matrices.
         - `VoxelGenerator.py`: A class for generating and saving 3D matrices.
+
+- `Main_test_analysis_folders.py` : Standby
+- `Main_test_analysis_folders.py` : Standby
+- `Main_test_generator.py` : Standby
+
+## Examples
+
+Currently, if you're considering the creation of this main function, I highly recommend it, especially for multiprocessing classes.
+
+"src\Data\Images_32_3D" refers to the images for this test. It is important to note that OEMM is designed especially for directories, and this class uses multiprocessing to extract the Euler descriptor from each image. The level of parallelism depends on the number of CPU cores available. This code is set to use half of the available cores, but you can change this value. However, be cautious when doing so.
+
+```python
+from src.OEMM import OEMM
+from src.Utils.Utils import save_to_csv
+
+def main():
+    # * Example usage
+    Euler_multiprocessing = OEMM(r"src\Data\Images_32_3D");
+    Combinations_all, Euler_all, Descriptor = Euler_multiprocessing.get_array(32 + 2, 32 + 2, 32 + 2);
+    save_to_csv(r"src\Data", r"src\Data\Images_32_3D", Descriptor, Combinations_all, Euler_all);
+
+if __name__ == '__main__':
+    # For Windows support
+    main();
+
+```
+The difference is small because you only need to change the appropriate class for your the task; everything else remains unchanged. However, it's important to remember that some of these classes depend completely on multiprocessing, which can lead to worse performance. The speed is determined by both the hardware you use and the size of the images.
+
+```python
+from src.OES import OES
+from src.Utils.Utils import save_to_csv
+
+def main():
+    # * Example usage
+    Euler_multiprocessing = OES(r"src\Data\Images_32_3D");
+    Combinations_all, Euler_all, Descriptor = Euler_multiprocessing.get_array(32 + 2, 32 + 2, 32 + 2);
+    save_to_csv(r"src\Data", r"src\Data\Images_32_3D", Descriptor, Combinations_all, Euler_all);
+
+if __name__ == '__main__':
+    # For Windows support
+    main();
+
+```
 
 ## Co-authors
 
