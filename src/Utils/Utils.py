@@ -7,6 +7,8 @@ from itertools import combinations
 from src.Utils.Config import Config
 from typing import Optional, Union, List, Tuple
 
+from skimage import measure
+
 def count_combinations(VIEW_CHUNK : np.ndarray, STORAGELIST_array : List[np.ndarray]) -> np.ndarray:
     """
     Count the number of combinations of elements in VIEW_CHUNK that match each element in STORAGELIST_array.
@@ -226,12 +228,12 @@ def calculate_volume(Image: np.ndarray) -> int:
 
 def calculate_enclosing_surface(Image : np.ndarray) -> int:
     """
-    Calculate the Enclosing_surface of 1-pixel regions in a 3D binary image.
+    Calculate the Enclosing_surface of 1-pixel regions in a 3D Binary image.
 
     Parameters
     ----------
     Image : np.ndarray
-        3D binary image where 1 represents the region of interest.
+        3D Binary image where 1 represents the region of interest.
 
     Returns
     -------
@@ -239,7 +241,7 @@ def calculate_enclosing_surface(Image : np.ndarray) -> int:
         Total Enclosing_surface of the 1-pixel regions in the 3D image.
     """
     if Image.ndim != 3:
-        raise ValueError("Input should be a 3D binary image.")
+        raise ValueError("Input should be a 3D Binary image.")
 
     Enclosing_surface = 0;
 
@@ -267,12 +269,12 @@ def calculate_enclosing_surface(Image : np.ndarray) -> int:
 
 def calculate_contact_surface(Image : np.ndarray) -> int:
     """
-    Calculate the Enclosing_surface of 1-pixel regions in a 3D binary image.
+    Calculate the Enclosing_surface of 1-pixel regions in a 3D Binary image.
 
     Parameters
     ----------
     Image : np.ndarray
-        3D binary image where 1 represents the region of interest.
+        3D Binary image where 1 represents the region of interest.
 
     Returns
     -------
@@ -280,7 +282,7 @@ def calculate_contact_surface(Image : np.ndarray) -> int:
         Total Enclosing_surface of the 1-pixel regions in the 3D image.
     """
     if Image.ndim != 3:
-        raise ValueError("Input should be a 3D binary image.")
+        raise ValueError("Input should be a 3D Binary image.")
 
     Contact_surface = 0;
 
@@ -305,6 +307,95 @@ def calculate_contact_surface(Image : np.ndarray) -> int:
     #print(" Contact surface of 1-pixel regions:", Contact_surface)
 
     return Contact_surface
+
+def calculate_numbers_objects(Binary_image_3d: np.ndarray) -> int:
+    """
+    Analyzes a 3D Binary image and calculates the number of objects.
+
+    Attributes:
+    -----------
+    Binary_image_3d : np.ndarray
+        The 3D binary image to be analyzed.
+
+    Returns:
+    --------
+    int:
+        A list containing labels of detected objects.
+    """
+
+    # * Label connected components
+    Labeled_image = measure.label(Binary_image_3d, connectivity=3);
+
+    # * Analyze labeled components
+    Properties = measure.regionprops(Labeled_image);
+
+    # * Extract objects and analyze Properties
+    Object_properties = [prop for prop in Properties if prop.label != 0]  # Exclude background label (0)
+
+    for _, obj in enumerate(Object_properties):
+      print(f"Objects : {obj.label}");
+
+    # * Extract labels of detected objects
+    Objects = obj.label;
+
+    return Objects
+
+def calculate_numbers_cavities(Binary_image_3d: np.ndarray) -> int:
+    """
+    Analyzes a 3D Binary image and calculates the number of cavities.
+
+    Attributes:
+    -----------
+    Binary_image_3d : np.ndarray
+        The 3D Binary image to be analyzed.
+
+    Returns:
+    --------
+    int:
+        A list containing labels of detected Cavities.
+    """
+    # * Invert Binary image
+    Binary_image_3d_inverted = np.logical_not(Binary_image_3d);
+
+    # * Label connected components
+    Labeled_image = measure.label(Binary_image_3d_inverted, connectivity=3);
+
+    # * Analyze labeled components
+    Properties = measure.regionprops(Labeled_image);
+
+    # * Extract Cavities and analyze Properties
+    Cavities_properties = [prop for prop in Properties if prop.label != 0]  # Exclude background label (0)
+
+    for _, obj in enumerate(Cavities_properties):
+      print(f"Cavities : {obj.label}");
+
+    # * Extract labels of detected Cavities
+    Cavities = obj.label;
+
+    return Cavities
+
+def calculate_numbers_tunnels(Binary_image_3d: np.ndarray, Euler: int) -> int:
+    """
+    Analyzes a 3D Binary image and calculates the number of tunnels.
+
+    Attributes:
+    -----------
+    Binary_image_3d : np.ndarray
+        The 3D Binary image to be analyzed.
+    Euler : int
+        Euler characteristic of the binary image.
+
+    Returns:
+    --------
+    int:
+        The number of tunnels detected in the binary image.
+    """
+    Objects = calculate_numbers_objects(Binary_image_3d);
+    Cavities = calculate_numbers_cavities(Binary_image_3d);
+
+    Tunnels = (Objects + Cavities - Euler);
+
+    return Tunnels
 
 def save_to_csv(Main_dest_path : str,
                 Folder_read : str,

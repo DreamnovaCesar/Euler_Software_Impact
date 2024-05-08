@@ -20,6 +20,7 @@ from src.OVC import OVC
 from src.OVMM import OVMM
 from src.OVS import OVS
 
+#from src.Test_OES import Test_OES
 from src.Decorator.TimerCMD import Timer
 
 @Timer.timer("Execution_main_test_analysis.log")
@@ -50,7 +51,7 @@ def main_test_analysis(Folder : str) -> None:
         Dimensions[1] = (Dimensions[1] + 2);
         Dimensions[2] = (Dimensions[2] + 2);
 
-        '''Test_Octovoxels = OCSC(File_path);
+        Test_Octovoxels = OCSC(File_path);
         Combinations, Descriptor, Descriptor_name = Test_Octovoxels.get_array(Dimensions[0], Dimensions[1], Dimensions[2]);
         save_to_csv(Folder, File_path, Descriptor_name, Combinations, Descriptor);
 
@@ -72,7 +73,7 @@ def main_test_analysis(Folder : str) -> None:
 
         Test_Octovoxels = OESS(File_path);
         Combinations, Descriptor, Descriptor_name = Test_Octovoxels.get_array(Dimensions[0], Dimensions[1], Dimensions[2]);
-        save_to_csv(Folder, File_path, Descriptor_name, Combinations, Descriptor);'''
+        save_to_csv(Folder, File_path, Descriptor_name, Combinations, Descriptor);
 
         Test_Octovoxels = OEC(File_path);
         Combinations, Descriptor, Descriptor_name = Test_Octovoxels.get_array(Dimensions[0], Dimensions[1], Dimensions[2]);

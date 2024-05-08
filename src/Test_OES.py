@@ -5,6 +5,9 @@ import pandas as pd
 from src.Utils.Config import Config
 from src.Utils.DataLoader import DataLoader
 from src.Utils.Utils import count_combinations
+from src.Utils.Utils import calculate_enclosing_surface
+from src.Utils.Utils import calculate_contact_surface
+from src.Utils.Utils import calculate_volume
 
 from src.Decorator.TimerCMD import Timer
 from src.Decorator.multiprocessing_info import multiprocessing_info
@@ -12,6 +15,7 @@ from src.Decorator.multiprocessing_info import multiprocessing_info
 from typing import Optional, Union, List
 
 from src.Test_DM import DM
+from src.Utils.ByteStorage import ByteStorage
 
 class Test_OES(DM):
     """
@@ -61,7 +65,10 @@ class Test_OES(DM):
 
         """
         super().__init__(path, None)
-        self.Descriptor = "Euler";
+        self.Descriptor = "MISC_Async";
+        
+        self.SLC1 = ByteStorage;
+        self.STORAGELIST_OCTO = self.SLC1.to_numpy_array();
     
     # * Class description
     def __str__(self) -> str:
@@ -129,21 +136,56 @@ class Test_OES(DM):
         view_CHUNK_2x1x2 = np.lib.stride_tricks.sliding_window_view(Arrays, (Config.Octovoxel_size, 1, Config.Octovoxel_size));
         view_CHUNK_1x2x2 = np.lib.stride_tricks.sliding_window_view(Arrays, (1, Config.Octovoxel_size, Config.Octovoxel_size));
 
+        # * Create sliding windows for CHUNK for faster access to sub-volumes
+        VIEW_CHUNK = np.lib.stride_tricks.sliding_window_view(Arrays, (Config.Octovoxel_size, Config.Octovoxel_size, Config.Octovoxel_size));
+
         # * Resize sliding windows to 1x2x2
         view_CHUNK_2x2x1_resized = view_CHUNK_2x2x1.reshape(-1, 1, Config.Octovoxel_size, Config.Octovoxel_size);
         view_CHUNK_2x1x2_resized = view_CHUNK_2x1x2.reshape(-1, 1, Config.Octovoxel_size, Config.Octovoxel_size);
+
         # * Convert STORAGELIST to a single numpy array for vectorized comparisons
-        STORAGELIST_array = np.array(STORAGELIST)
+        STORAGELIST_array = np.array(STORAGELIST);
+        self.STORAGELIST_OCTO_array = np.array(self.STORAGELIST_OCTO);
 
         # * Count combinations for each sliding window
-        Combinations_int_1 = count_combinations([[view_CHUNK_2x2x1_resized]], STORAGELIST_array)
-        Combinations_int_2 = count_combinations([[view_CHUNK_2x1x2_resized]], STORAGELIST_array)
-        Combinations_int_3 = count_combinations(view_CHUNK_1x2x2, STORAGELIST_array)
+        Combinations_int_1 = count_combinations([[view_CHUNK_2x2x1_resized]], STORAGELIST_array);
+        Combinations_int_2 = count_combinations([[view_CHUNK_2x1x2_resized]], STORAGELIST_array);
+        Combinations_int_3 = count_combinations(view_CHUNK_1x2x2, STORAGELIST_array);
+        Combinations_octovoxel = count_combinations(VIEW_CHUNK, self.STORAGELIST_OCTO_array);
 
+        Concatenated_combinations = Combinations_int_1 + Combinations_int_2 + Combinations_int_3;
+
+        TETRAVOXEL = Concatenated_combinations[-1];
+        OCTOVOXEL = Combinations_octovoxel[-1];
+
+        Enclosing_surface = calculate_enclosing_surface(Arrays);
+        Contact_surface = calculate_contact_surface(Arrays);
+        Volume = calculate_volume(Arrays);
+
+        N2 = (Enclosing_surface + Contact_surface);
+        N1 = (TETRAVOXEL + (2 * Enclosing_surface));
+        N0 = ((2 * N1) - (4 * Volume) - (2 * Enclosing_surface) - OCTOVOXEL);
+
+        False_Euler = (N1 - (((3 * Enclosing_surface) / 2)) - (2 * Volume) - OCTOVOXEL);
+
+        # * Return the calculated Combinations_int as a numpy array.
+        Combinations = (Combinations_octovoxel * Config._OUTPUT_3D_);
+        Euler = np.sum(Combinations);
+
+        print(f"Processing file... {File}");
+        print(f"N0 ---- {N0}");
+        print(f"N1 ---- {N1}");
+        print(f"N2 ---- {N2}");
+        print(f"S ---- {Enclosing_surface}");
+        print(f"VO ---- {OCTOVOXEL}");
+        print(f"Vt ---- {TETRAVOXEL}");
+        print(f"N3 ---- {Volume}");
+        print(f"Euler 1 ---- {False_Euler}");
+        print(f"Euler 2 ---- {Euler}");
         # * Concatenate the three Combinations_int arrays along axis 0, excluding the first value from each
-        Concatenated_combinations = np.concatenate([Combinations_int_1[1:], Combinations_int_2[1:], Combinations_int_3[1:]], axis=0)
+        #Concatenated_combinations = np.concatenate([Combinations_int_1[1:], Combinations_int_2[1:], Combinations_int_3[1:]], axis=0)
 
-        return Concatenated_combinations
+        return Concatenated_combinations, N1
 
     @Timer.timer()
     @multiprocessing_info 
@@ -183,12 +225,12 @@ class Test_OES(DM):
 
                     if(Depth != None and Height != None and Width != None):
                 
-                        Combinations = self.process_octovoxel(File_path, self.STORAGELIST, Depth, Height, Width);
+                        Combinations, N1 = self.process_octovoxel(File_path, self.STORAGELIST, Depth, Height, Width);
 
                         # * Return the calculated Combinations_int as a numpy array.
                     
                     Combinations_all.append(Combinations);
-                    Euler_all.append(None);
+                    Euler_all.append(N1);
 
                 return Combinations_all, Euler_all, self.Descriptor 
             
@@ -198,14 +240,12 @@ class Test_OES(DM):
 
                         print(f"Processing file...");
 
-                        Combinations = self.process_octovoxel(self.Path, self.STORAGELIST, Depth, Height, Width);
+                        Combinations, N1 = self.process_octovoxel(self.Path, self.STORAGELIST, Depth, Height, Width);
                         
                         # * Return the calculated Combinations_int as a numpy array.
                         #Combinations_euler = (Combinations * Config._OUTPUT_3D_);
-                    
-                        Euler = np.sum(None);
 
-                        return Combinations, Euler, self.Descriptor 
+                        return Combinations, N1, self.Descriptor 
             
         except Exception as e:
             # * You can also choose to return a default value or handle the exception differently.

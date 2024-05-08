@@ -10,6 +10,7 @@ from src.Decorator.TimerCMD import Timer
 from src.Decorator.multiprocessing_info import multiprocessing_info
 
 from src.DM import DM
+from typing import Optional, Union, List, Tuple
 
 class BME(DM):
     """
@@ -38,7 +39,7 @@ class BME(DM):
     """
     def __init__(self, 
                  path: str,
-                 connectivity : int = 4
+                 connectivity : int = 8
         ) -> None:
         """
         Initialize ME.
@@ -89,110 +90,73 @@ class BME(DM):
         None
         """
         print(f'Destructor called, {self.__class__.__name__} class destroyed.');
-    
-    def save_to_csv(self, 
-                    Combinations_data : np.ndarray, 
-                    Euler_data : np.ndarray
-                    ) -> None:
+
+    #@Timer.timer()
+    def process_octovoxel(self, 
+                          File : str, 
+                          STORAGELIST : List[np.ndarray], 
+                          Depth : int, 
+                          Height : int, 
+                          Width : int) -> Tuple[np.ndarray, int]:
         """
-        Save the combinations and Euler values to a CSV file.
+        Calculate Combinations_int based on the given Storage_list and return them as a numpy array.
 
         Parameters:
         -----------
-        Combinations : np.ndarray
-            The array of combinations to be saved.
+        File : str
+            The name of the file being processed.
+        STORAGELIST : List[np.ndarray]
+            List of numpy array representations of the binary storage list.
+        Depth : int
+            The depth dimension of the 3D array.
+        Height : int
+            The height dimension of the 3D array.
+        Width : int
+            The width dimension of the 3D array.
 
-        Euler : np.ndarray
-            The array of Euler values.
+        Returns:
+        -------
+        Tuple[np.ndarray, int]
+            A tuple containing an array of Combinations_int and Euler value.
+
+        Notes:
+        ------
+        - Octovoxel size is set to 2.
+        - Euler value is the sum of Combinations_int.
+
         """
 
-        _Is_list = False;
-    
-        if isinstance(Combinations_data, list) and isinstance(Euler_data, list):
-            _Is_list = True;       
-
-
-        Dataframe_completed = pd.DataFrame();
-
-        try:
-            
-            if(_Is_list):
-
-                for _, (Combination, Euler) in enumerate(zip(Combinations_data, Euler_data)):
-                    
-                    #print(f"Combinations_data shape: {Combination.shape}")
-                    #print(f"Euler_data shape: {Euler.shape}")
-                    #print(f"{Combination} ------ {Euler}");
-
-                    print(f"Combinations len {Combination.shape[0]}");
-                    
-                    Combination = Combination.reshape((1, Combination.shape[0]));
-
-                    print(f"Combinations len reshape {Combination.shape[0]}, {Combination.shape[1]}");
-                    print(f"Rows : {Combination.shape[0]} ------ Columns : {Combination.shape[1]}");
-
-                    # * Convert the combinations array to a Pandas DataFrame
-                    Dataframe_combination = pd.DataFrame(Combination, columns=[f"BitQuad {i+1}" for i in range(Combination.shape[1])]);
-
-                    # * Add the 'Euler' column to the DataFrame
-                    Dataframe_combination['Euler'] = Euler;
-
-                    # * Append the new data to the DataFrame
-                    Dataframe_completed = pd.concat([Dataframe_completed, Dataframe_combination], ignore_index=True);
-                    
-                    print(Dataframe_completed);
-                
-                # * Check if the folder exists, create it if not
-                if not os.path.exists(self.Dest_path):
-                    os.makedirs(self.Dest_path);
-
-                Base_name = f"Combinations_And_Euler_{self.Basepath}_{self._C_}.csv";
-
-                print(f"Combinations_And_Euler_{self.Basepath}.csv");
-
-                # * Save the DataFrame to a CSV file
-                File_path = os.path.join(self.Dest_path, Base_name);
-                Dataframe_completed.to_csv(File_path, index=False);
-
-            else:   
-                    Combination = Combinations_data;
-                    Euler = Euler_data;
-
-                    #print(f"Combinations_data shape: {Combination.shape}")
-                    #print(f"Euler_data shape: {Euler.shape}")
-                    #print(f"{Combination} ------ {Euler}");
-
-                    print(f"Combinations len {Combination.shape[0]}");
-                    Combination = Combination.reshape((1, Combination.shape[0]));
-                    print(f"Combinations len reshape {Combination.shape[0]}, {Combination.shape[1]}");
-                    print(f"Rows : {Combination.shape[0]} ------ Columns : {Combination.shape[1]}");
-
-                    # * Convert the combinations array to a Pandas DataFrame
-                    Dataframe_combination = pd.DataFrame(Combination, columns=[f"BitQuad {i+1}" for i in range(Combination.shape[1])]);
-
-                    # * Add the 'Euler' column to the DataFrame
-                    Dataframe_combination['Euler'] = Euler;
-
-                    print(Dataframe_combination);
-                
-                    # * Check if the folder exists, create it if not
-                    if not os.path.exists(self.Dest_path):
-                        os.makedirs(self.Dest_path);
-
-                    Base_name = f"Combinations_And_Euler_{self.Basepath}_{self._C_}.csv";
-
-                    print(f"Combinations_And_Euler_{self.Basepath}.csv");
-
-                    # * Save the DataFrame to a CSV file
-                    File_path = os.path.join(self.Path, Base_name);
-                    Dataframe_combination.to_csv(File_path, index=False);
-                
-            print(f"Combinations and Euler values saved to {File_path}");
+        Combinations = int(Config.Byte_binary, 2);
         
-        except Exception as e:
-            print(f"An error occurred while saving to CSV: {e} {self.__class__.__name__}")
+        # * Create an array to store Combinations_int and initialize it with zeros.
+        Combinations_int = np.zeros((Combinations), dtype='int');
+        
+        File_path = os.path.join(self.Path, File);
+        Arrays = DataLoader.load_data(File_path);
 
-    @Timer.timer()
+        # * Reshape the array to a 3D array based on the calculated height.
+        Arrays = Arrays.reshape(Height, Width);
+        
+        # * Create sliding windows for CHUNK for faster access to sub-volumes
+        VIEW_CHUNK = np.lib.stride_tricks.sliding_window_view(Arrays, (Config.Bitquads_size, Config.Bitquads_size));
+        
+        # * Convert STORAGELIST to a single numpy array for vectorized comparisons
+        STORAGELIST_array = np.array(STORAGELIST);
+        
+        # * Vectorized comparison and counting
+        for index in range(len(STORAGELIST)):
+            Equal_mask = (VIEW_CHUNK == STORAGELIST_array[index]).all(axis=(3, 4, 5));
+            Combinations_int[index] += Equal_mask.sum();
+
+        # * Return the calculated Combinations_int as a numpy array.
+        Combinations = (Combinations_int * Config._OUTPUT_2D_8_);
+        Euler = np.sum(Combinations);
+
+        print(f"Processing file... {File_path} ----------- {Euler}");
+
+        return Combinations_int, Euler
+    
+    @Timer.timer("Execution_BME.log")
     @multiprocessing_info   
     def get_array(self, Height : int, Width : int) -> np.ndarray:
         """
@@ -223,39 +187,12 @@ class BME(DM):
 
                     if(Height != None and Width != None):
                 
-                        Combinations = int(Config.Nibble_binary, 2);
-                        
-                        # * Create an array to store Combinations_int and initialize it with zeros.
-                        Combinations_int = np.zeros((Combinations), dtype='int');
-
-                        self.Arrays = DataLoader.load_data(File_path);
-                        
-                        # * Reshape the array to a 3D array based on the calculated height.
-                        self.Arrays = self.Arrays.reshape(Height, Width);
-
-                        for i in range(self.Arrays.shape[0] - 1):
-                            for j in range(self.Arrays.shape[1] - 1):
-                                for index in range(len(self.STORAGELIST)):
-                                    if np.array_equal(np.array(self.Arrays[i:Config.Bitquads_size + i, 
-                                                                           j:Config.Bitquads_size + j]),  
-
-                                                        np.array(self.STORAGELIST[index])):                       
-                                            
-                                            Combinations_int[index] += 1;
-
-                                            #print(Combinations_int);
-                        
-                        # * Return the calculated Combinations_int as a numpy array.
-                        Combinations = (Combinations_int * self._CONNECTIVITY_);
-
-                        Euler = np.sum(Combinations);
+                        Combinations_int, Euler = self.process_octovoxel(File_path, self.STORAGELIST, Height, Width);
                     
                         #print(f"Combinations = {Combinations}, Euler = {Euler}");
                     
                     Combinations_all.append(Combinations_int);
                     Euler_all.append(Euler);
-
-                self.save_to_csv(Combinations_all, Euler_all)
 
                 return Combinations_all, Euler_all
             
@@ -265,36 +202,7 @@ class BME(DM):
 
                         print(f"Processing file...");
 
-                        Combinations = int(Config.Nibble_binary, 2);
-                        
-                        # * Create an array to store Combinations_int and initialize it with zeros.
-                        Combinations_int = np.zeros((Combinations), dtype='int');
-
-                        self.Arrays = DataLoader.load_data(self.Path);
-
-                        # * Reshape the array to a 3D array based on the calculated height.
-                        self.Arrays = self.Arrays.reshape(Height, Width);
-
-                        for i in range(self.Arrays.shape[0] - 1):
-                            for j in range(self.Arrays.shape[1] - 1):
-                                    for index in range(len(self.STORAGELIST)):
-                                        if np.array_equal(np.array(self.Arrays[i:Config.Bitquads_size + i, 
-                                                                               j:Config.Bitquads_size + j]),        
-
-                                                        np.array(self.STORAGELIST[index])):                       
-                                            
-                                            Combinations_int[index] += 1;
-
-                                            #print(Combinations_int);
-                        
-                        # * Return the calculated Combinations_int as a numpy array.
-                        Combinations = (Combinations_int * self._CONNECTIVITY_);
-                    
-                        Euler = np.sum(Combinations);
-
-                        #print(f"Combinations = {Combinations_int}, Euler = {Euler}");
-
-                        self.save_to_csv(Combinations_int, Euler)
+                        Combinations, Euler = self.process_octovoxel(File_path, self.STORAGELIST, Height, Width);
 
                         return Combinations, Euler
             
