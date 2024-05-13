@@ -6,7 +6,7 @@
 
 <a name="readme-top"></a>
 
-<span style="font-size:1em;"> $${\color{red}{\text{This is version 0.5. Version 1.0 is planned to incorporate this algorithm into a library. However, for now, you can refer to the description to see how this code can be utilized.}}}$$</span>
+<span style="font-size:1em;"> $${\color{red}{\text{This is version 0.5. Version 1.0 is planned to incorporate this algorithm into a library. However,}}}\newline{\color{red}{\text{for now, you can refer to the description to see how this code can be utilized.}}}$$</span>
 
 # Euler-number-3D-using-Regression-Models
 
@@ -82,13 +82,13 @@ By following these steps, you'll successfully create a virtual environment with 
 
 These images depict the 3D objects utilized in the study, offering a visual representation of the image types employed for this experiment.
 
-![Sphere0](Images\Sphere0_65_65_31_0.png)
+![Sphere0](/Images/Sphere0_65_65_31_0.png)
 
-![Sphere5](Images\Sphere5_65_65_31_0.png)
+![Sphere5](/Images/Sphere5_65_65_31_0.png)
 
-![Squirrel](Images\Squirrel_128_128_128_0.png)
+![Squirrel](/Images/Squirrel_128_128_128_0.png)
 
-![Vase](Images\Vase_69_53_41_0.png)
+![Vase](/Images/Vase_69_53_41_0.png)
 
 ## Examples
 
@@ -115,9 +115,9 @@ if __name__ == '__main__':
 
 The ensuing 3D object images exemplify the potential output of a resolution of 34x34x34.
 
-![Image 1](Images\Example_32_0_0.png)
+![Image 1](/Images/Example_32_0_0.png)
 
-![Image 2](Images\Example_32_1_0.png)
+![Image 2](/Images/Example_32_1_0.png)
 
 
 Currently, if you're considering the creation of this main function, I highly recommend it, especially for multiprocessing classes.
