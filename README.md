@@ -115,9 +115,10 @@ if __name__ == '__main__':
 
 The ensuing 3D object images exemplify the potential output of a resolution of 34x34x34.
 
-<img src="/Images/Example_32_0_0.png" alt="drawing" width="200"/>
-
-<img src="/Images/Example_32_1_0.png" alt="drawing" width="200"/>
+<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px;">
+    <img src="/Images/Example_32_0_0.png" alt="drawing" width="200"/>
+    <img src="/Images/Example_32_1_0.png" alt="drawing" width="200"/>
+</div>
 
 Currently, if you're considering the creation of this main function, I highly recommend it, especially for multiprocessing classes.
 
