@@ -6,6 +6,8 @@
 
 <a name="readme-top"></a>
 
+<span style="font-size:1em;"> $${\color{red}{\text{This is version 0.5. Version 1.0 is planned to incorporate this algorithm into a library. However, for now, you can refer to the description to see how this code can be utilized.}}}$$</span>
+
 # Euler-number-3D-using-Regression-Models
 
 Hey there! I see you're interested in learning about the Euler number. This is a fundamental concept in mathematics that helps us understand the topology of objects in 2D and 3D space.
@@ -19,18 +21,6 @@ It's important to note that the Euler number is always an integer and can be neg
 Euler number = Number of connected components - Number of handles + Number of boundaries
 
 We present a new library designed to simplify the analysis of Euler characteristics. This program addresses the difficulties involved in generating 3D test objects and the complexities of extracting Octo-Voxel patterns. The library uses a novel method to rapidly generate data, AND extract descriptors by using effective multiprocessing. Furthermore, a method for extracting discrete CHUNKS from an image has been developed, allowing for separate multiprocessing assessment. This method accelerates the process of combination extraction and offers researchers a quick and effective way to look into Euler characteristics in a variety of applications. Our system provides a comprehensive solution for researchers looking for effective ways to create and analyze data, which will advance the discovery of Euler characteristics across a wide range of areas.
-
-## Regression Model
-
-- `ARD Regression` : ARD regression is a Bayesian regression technique that automatically determines the relevance of input features by estimating their importance. It assigns a coefficient to each input feature, and the model automatically selects the most relevant features while shrinking the coefficients of less relevant ones towards zero. This technique helps prevent overfitting by effectively performing feature selection and regularization simultaneously.
-
-- `Orthogonal Matching Pursuit Regression` : Orthogonal Matching Pursuit (OMP) regression is a sparse linear regression technique used for feature selection and model fitting. It iteratively selects the most correlated features with the target variable and updates the model coefficients to minimize the residual error. OMP is particularly useful when dealing with high-dimensional data and can provide a sparse solution, meaning it selects only a subset of the available features for prediction.
-
-- `Bayesian Regression` : Bayesian regression is a statistical framework for regression analysis that applies Bayesian methods to estimate the parameters of a regression model. Unlike traditional regression techniques, Bayesian regression provides probabilistic estimates of model parameters, allowing for uncertainty quantification.
-
-- `Linear Regression` : Linear regression is a fundamental statistical technique used to model the relationship between one or more independent variables (features) and a dependent variable (target). It assumes a linear relationship between the input features and the target variable, represented by a straight line in the case of simple linear regression or a hyperplane in the case of multiple linear regression.
-
-- `LassoLarsIC` : LassoLarsIC is a variant of Lasso regression, a regularization technique used for feature selection and regularization in linear regression models. It combines the least angle regression (Lars) algorithm with Lasso regularization and an information criterion for model selection. LassoLarsIC iteratively fits the model with different subsets of features, gradually adding features that are most correlated with the target variable while simultaneously shrinking the coefficients of less relevant features towards zero.
 
 ## Setup
 
@@ -82,15 +72,57 @@ By following these steps, you'll successfully create a virtual environment with 
         - `MatrixGenerator.py`: A class for generating and saving matrices.
         - `VoxelGenerator.py`: A class for generating and saving 3D matrices.
 
-- `Main_test_analysis_folders.py` : Standby
-- `Main_test_analysis_folders.py` : Standby
-- `Main_test_generator.py` : Standby
+- `Main_test_analysis_folders.py` : This function is responsible for utilizing various classes to analyze folders and extract the images within them for shape descriptor analysis. It exclusively deals with 3D objects with resolutions of 4, 8, 16, and 32. Its purpose is to assess the duration of multiprocessing analysis for each image on the testing machine. It's important to note that these specific classes do not employ the CHUNKS method; instead, they analyze each image in a conventional manner, relying on the number of cores allocated or available processing power.
+
+- `Main_test_analysis` : This function employs both the simple method and the CHUNKS method. Here, 14 test images are utilized, which can be found in the `src\Data\Images` folder.
+
+- `Main_test_generator.py` : This function solely generates random objects. You specify the path, the object's resolution, and the desired number of objects.
+
+## Images 
+
+These images depict the 3D objects utilized in the study, offering a visual representation of the image types employed for this experiment.
+
+![Sphere0](Images\Sphere0_65_65_31_0.png)
+
+![Sphere5](Images\Sphere5_65_65_31_0.png)
+
+![Squirrel](Images\Squirrel_128_128_128_0.png)
+
+![Vase](Images\Vase_69_53_41_0.png)
 
 ## Examples
 
+Initially, the algorithm will be utilized to generate 3D objects. This algorithm serves as an exemplar for constructing objects for subsequent utilization. Despite the images being generated at a resolution of 32x32x32, the method incorporates a +2 increment to each measurement. This additional space surrounding the object is imperative to facilitate the enhanced extraction of the octa-voxels. Thus, resulting in objects of dimensions 34x34x34 in this scenario.
+
+```python
+from src.VoxelGenerator import VoxelGenerator
+
+def main():
+
+    Voxel_generator = VoxelGenerator(path = r"src\Data\Images_32_3D", 
+                                     depth = 32, 
+                                     width = 32, 
+                                     height = 32, 
+                                     num_matrices = 1000);
+    
+    Voxel_generator.generate_matrices();
+
+if __name__ == '__main__':
+    # For Windows support
+    main();
+
+```
+
+The ensuing 3D object images exemplify the potential output of a resolution of 34x34x34.
+
+![Image 1](Images\Example_32_0_0.png)
+
+![Image 2](Images\Example_32_1_0.png)
+
+
 Currently, if you're considering the creation of this main function, I highly recommend it, especially for multiprocessing classes.
 
-"src\Data\Images_32_3D" refers to the images for this test. It is important to note that OEMM is designed especially for directories, and this class uses multiprocessing to extract the Euler descriptor from each image. The level of parallelism depends on the number of CPU cores available. This code is set to use half of the available cores, but you can change this value. However, be cautious when doing so.
+"src\Data\Images_32_3D" refers to the images for this test; each one is a CSV file. It's important to note that OEMM is specifically designed for directories, and this class employs multiprocessing to extract the Euler descriptor from each image. The degree of parallelism is contingent upon the number of CPU cores accessible. This code is configured to utilize half of the available cores, but you have the option to modify this value. However, exercise caution when making adjustments.
 
 ```python
 from src.OEMM import OEMM
@@ -124,6 +156,27 @@ if __name__ == '__main__':
     main();
 
 ```
+For individual images, we recommend using the OEC for extracting the Euler number. The OEC is an algorithm designed for the proposed article, which introduces an innovation called CHUNKS. This algorithm enables us to partition images into chunks, allowing for parallel examination of each and quicker determination of the number of Octo-voxels. Vectorization is employed to accelerate processing, as required by Python. Below is an example of how to use it. If you intend to use a single image, remember that this algorithm relies on CSV files.
+
+Recall that every class listed above has the same Octo-voxel extraction capabilities; the only difference is that the functionality depends on the shape descriptor that is needed.
+
+```python
+from src.OEC import OEC
+from src.Utils.Utils import save_to_csv
+
+def main():
+    # * Example usage
+    Euler_multiprocessing = OEC(r"src\Data\Images_32_3D");
+    Combinations_all, Euler_all, Descriptor = Euler_multiprocessing.get_array(32 + 2, 32 + 2, 32 + 2);
+    save_to_csv(r"src\Data", r"src\Data\Images_32_3D", Descriptor, Combinations_all, Euler_all);
+
+if __name__ == '__main__':
+    # For Windows support
+    main();
+
+```
+
+The values within the get_array method are the depth, height, and width. In this part, you must enter the exact values of these dimensions so that it can perform a reshape operation. The rationale for adding '+ 2' to each measurement is that the folder has a resolution of 34x34x34, as that was how the data was originally created. If you have an image and know its dimensions, use those dimensions as parameters in the method.
 
 ## Co-authors
 
