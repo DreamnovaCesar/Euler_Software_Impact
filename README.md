@@ -115,9 +115,9 @@ if __name__ == '__main__':
 
 The ensuing 3D object images exemplify the potential output of a resolution of 34x34x34.
 
-![Image 1](/Images/Example_32_0_0.png)
+![Image 1](/Images/Example_32_0_0.png =100x20)
 
-![Image 2](/Images/Example_32_1_0.png)
+![Image 2](/Images/Example_32_1_0.png =100x20)
 
 
 Currently, if you're considering the creation of this main function, I highly recommend it, especially for multiprocessing classes.
