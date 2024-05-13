@@ -34,8 +34,8 @@ def main_test_analysis(Folder : str) -> None:
         r'src\Data\Images\1.- Torush_67_65_10_Matrix.txt' : [67, 65, 10],
         r'src\Data\Images\1.- Vase_69_53_41_Matrix.txt' : [69, 53, 41],
         r'src\Data\Images\1.- Cheese_102_102_102_Matrix.txt' : [102, 102, 102],
-        r'src\Data\Images\2.- Ardilla_128_128_128_Matrix.txt' : [128, 128, 128],
-        r'src\Data\Images\3.- Ajolote_256_256_256_Matrix.txt' : [256, 256, 256],
+        r'src\Data\Images\2.- Squirrel_128_128_128_Matrix.txt' : [128, 128, 128],
+        r'src\Data\Images\3.- Axolotl_256_256_256_Matrix.txt' : [256, 256, 256],
         #r'src\Data\Images\5.- Esfera_512_512_512_Matrix.txt' : [512, 512, 512]
         }
 

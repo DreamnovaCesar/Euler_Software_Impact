@@ -195,6 +195,21 @@ if __name__ == '__main__':
 
 ```
 
+For instance, consider the utilization of the algorithm with the Squirrel image. Similar preprocessing techniques were employed, augmenting the resolution to ensure the image is encompassed by 0-voxels. Merely replicating and inserting this code, specifying the image's position and the desired data saving location, should facilitate seamless execution without encountering any issues.
+
+```python
+def main():
+    # * Example usage
+    Euler_multiprocessing = OEC(r"src\Data\Images\2.- Ardilla_128_128_128_Matrix.txt");
+    Combinations_all, Euler_all, Descriptor = Euler_multiprocessing.get_array(128 + 2, 128 + 2, 128 + 2);
+    save_to_csv(r"src\Data", r"src\Data\Images\2.- Ardilla_128_128_128_Matrix.txt", Descriptor, Combinations_all, Euler_all);
+
+if __name__ == '__main__':
+    # For Windows support
+    main();
+
+```
+
 The values within the get_array method are the depth, height, and width. In this part, you must enter the exact values of these dimensions so that it can perform a reshape operation. The rationale for adding '+ 2' to each measurement is that the folder has a resolution of 34x34x34, as that was how the data was originally created. If you have an image and know its dimensions, use those dimensions as parameters in the method.
 
 ## Co-authors
