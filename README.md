@@ -6,8 +6,9 @@
 
 <a name="readme-top"></a>
 
-<span style="font-size:1em;"> $${\color{red}{\text{This is version 0.5. Version 1.0 is planned to incorporate this algorithm into a library. However,}}}$$
-\newline{\color{red}{\text{for now, you can refer to the description to see how this code can be utilized.}}}$$</span>
+<span style="font-size:4em;"> $${\color{red}{\text{This is version 0.5. Version 1.0 is planned to incorporate this algorithm into a library. However,}}}$$</span>
+<span style="font-size:4em;"> $${\color{red}{\text{for now, you can refer to the description to see how this code can be utilized.
+}}}$$</span>
 
 # Euler-number-3D-using-Regression-Models
 
