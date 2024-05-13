@@ -6,7 +6,8 @@
 
 <a name="readme-top"></a>
 
-<span style="font-size:1em;"> $${\color{red}{\text{This is version 0.5. Version 1.0 is planned to incorporate this algorithm into a library. However,}}}\newline{\color{red}{\text{for now, you can refer to the description to see how this code can be utilized.}}}$$</span>
+<span style="font-size:1em;"> $${\color{red}{\text{This is version 0.5. Version 1.0 is planned to incorporate this algorithm into a library. However,}}}$$
+\newline{\color{red}{\text{for now, you can refer to the description to see how this code can be utilized.}}}$$</span>
 
 # Euler-number-3D-using-Regression-Models
 
@@ -84,22 +85,23 @@ These images depict the 3D objects utilized in the study, offering a visual repr
 
 <div style="display: grid; grid-template-columns: repeat(2, 1fr); grid-auto-rows: auto; gap: 20px;">
     <div style="text-align: center;">
-        <img src="/Images/Sphere0_65_65_31_0.png" alt="drawing" width="200" height="200"/>
+        <img src="/Images/Sphere0_65_65_31_0.png" alt="drawing" width="300" height="300"/>
         <p>Sphere 1. Resolution 65x65x31, Euler number : 1</p>
     </div>
     <div style="text-align: center;">
-        <img src="/Images/Sphere5_65_65_31_0.png" alt="drawing" width="200" height="200"/>
+        <img src="/Images/Sphere5_65_65_31_0.png" alt="drawing" width="300" height="300"/>
         <p>Sphere 2. Resolution 65x65x31, Euler number : 1</p>
     </div>
     <div style="text-align: center;">
-        <img src="/Images/Squirrel_128_128_128_0.png" alt="drawing" width="200" height="200"/>
+        <img src="/Images/Squirrel_128_128_128_0.png" alt="drawing" width="300" height="300"/>
         <p>Squirrel. Resolution 128x128x128, Euler number : 1</p>
     </div>
     <div style="text-align: center;">
-        <img src="/Images/Vase_69_53_41_0.png" alt="drawing" width="200" height="200"/>
+        <img src="/Images/Vase_69_53_41_0.png" alt="drawing" width="300" height="300"/>
         <p>Vase. Resolution 69x53x41, Euler number : 0</p>
     </div>
 </div>
+
 ## Examples
 
 Initially, the algorithm will be utilized to generate 3D objects. This algorithm serves as an exemplar for constructing objects for subsequent utilization. Despite the images being generated at a resolution of 32x32x32, the method incorporates a +2 increment to each measurement. This additional space surrounding the object is imperative to facilitate the enhanced extraction of the octa-voxels. Thus, resulting in objects of dimensions 34x34x34 in this scenario.
@@ -127,11 +129,11 @@ The ensuing 3D object images exemplify the potential output of a resolution of 3
 
 <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px;">
     <div style="text-align: center;">
-        <img src="/Images/Example_32_0_0.png" alt="drawing" width="200" height="200"/>
+        <img src="/Images/Example_32_0_0.png" alt="drawing" width="300" height="300"/>
         <p style="text-align: center;">Image 32. Example 1</p>
     </div>
     <div style="text-align: center;">
-        <img src="/Images/Example_32_1_0.png" alt="drawing" width="200" height="200"/>
+        <img src="/Images/Example_32_1_0.png" alt="drawing" width="300" height="300"/>
         <p style="text-align: center;">Image 32. Example 2</p>
     </div>
 
