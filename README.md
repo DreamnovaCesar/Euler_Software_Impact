@@ -7,8 +7,7 @@
 <a name="readme-top"></a>
 
 <span style="font-size:4em;"> $${\color{red}{\text{This is version 0.5. Version 1.0 is planned to incorporate this algorithm into a library. However,}}}$$</span>
-<span style="font-size:4em;"> $${\color{red}{\text{for now, you can refer to the description to see how this code can be utilized.
-}}}$$</span>
+<span style="font-size:4em;"> $${\color{red}{\text{for now, you can refer to the description to see how this code can be utilized.}}}$$</span>
 
 # Euler-number-3D-using-Regression-Models
 
@@ -86,16 +85,16 @@ These images depict the 3D objects utilized in the study, offering a visual repr
 
 <div style="display: grid; grid-template-columns: repeat(2, 1fr); grid-auto-rows: auto; gap: 20px;">
     <div style="text-align: center;">
+        <img src="/Images/Squirrel_128_128_128_0.png" alt="drawing" width="300" height="300"/>
+        <p>Squirrel. Resolution 128x128x128, Euler number : 1</p>
+    </div>
+    <div style="text-align: center;">
         <img src="/Images/Sphere0_65_65_31_0.png" alt="drawing" width="300" height="300"/>
         <p>Sphere 1. Resolution 65x65x31, Euler number : 1</p>
     </div>
     <div style="text-align: center;">
         <img src="/Images/Sphere5_65_65_31_0.png" alt="drawing" width="300" height="300"/>
         <p>Sphere 2. Resolution 65x65x31, Euler number : 1</p>
-    </div>
-    <div style="text-align: center;">
-        <img src="/Images/Squirrel_128_128_128_0.png" alt="drawing" width="300" height="300"/>
-        <p>Squirrel. Resolution 128x128x128, Euler number : 1</p>
     </div>
     <div style="text-align: center;">
         <img src="/Images/Vase_69_53_41_0.png" alt="drawing" width="300" height="300"/>
