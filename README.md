@@ -83,10 +83,22 @@ By following these steps, you'll successfully create a virtual environment with 
 These images depict the 3D objects utilized in the study, offering a visual representation of the image types employed for this experiment.
 
 <div style="display: grid; grid-template-columns: repeat(2, 1fr); grid-auto-rows: auto; gap: 20px;">
-    <img src="/Images/Sphere0_65_65_31_0.png" alt="drawing" width="200" height="200"/>
-    <img src="/Images/Sphere5_65_65_31_0.png" alt="drawing" width="200" height="200"/>
-    <img src="/Images/Squirrel_128_128_128_0.png" alt="drawing" width="200" height="200"/>
-    <img src="/Images/Vase_69_53_41_0.png" alt="drawing" width="200" height="200"/>
+    <div>
+        <img src="/Images/Squirrel_128_128_128_0.png" alt="drawing" width="300" height="300"/>
+        <p style="text-align: center;">Squirrel</p>
+    </div>
+    <div>
+        <img src="/Images/Sphere0_65_65_31_0.png" alt="drawing" width="300" height="300"/>
+        <p style="text-align: center;">Sphere 1</p>
+    </div>
+    <div>
+        <img src="/Images/Sphere5_65_65_31_0.png" alt="drawing" width="300" height="300"/>
+        <p style="text-align: center;">Sphere 2</p>
+    </div>
+    <div>
+        <img src="/Images/Vase_69_53_41_0.png" alt="drawing" width="300" height="300"/>
+        <p style="text-align: center;">Vase</p>
+    </div>
 </div>
 
 ## Examples
@@ -115,8 +127,15 @@ if __name__ == '__main__':
 The ensuing 3D object images exemplify the potential output of a resolution of 34x34x34.
 
 <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px;">
-    <img src="/Images/Example_32_0_0.png" alt="drawing" width="200" height="200"/>
-    <img src="/Images/Example_32_1_0.png" alt="drawing" width="200" height="200"/>
+    <div>
+        <img src="/Images/Example_32_0_0.png" alt="drawing" width="200" height="200"/>
+        <p style="text-align: center;">Image 32. Example 1</p>
+    </div>
+    <div>
+        <img src="/Images/Example_32_1_0.png" alt="drawing" width="200" height="200"/>
+        <p style="text-align: center;">Image 32. Example 2</p>
+    </div>
+
 </div>
 
 Currently, if you're considering the creation of this main function, I highly recommend it, especially for multiprocessing classes.
