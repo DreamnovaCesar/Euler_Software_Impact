@@ -9,7 +9,7 @@
 <span style="font-size:2em;"> $${\color{red}{\text{This is version 0.5. Version 1.0 is planned to incorporate this algorithm into a library.}}}$$</span>
 
 
-# Euler-number-3D-using-Regression-Models
+# Euler-number-3D
 
 Hey there! I see you're interested in learning about the Euler number. This is a fundamental concept in mathematics that helps us understand the topology of objects in 2D and 3D space.
 
